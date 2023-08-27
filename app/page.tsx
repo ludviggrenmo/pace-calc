@@ -75,14 +75,14 @@ export default function Home() {
 		}
 
 		if (pace && distance) {
-			const finalTime = convertPaceAndDistanceToTime(
+			const finalTimes = convertPaceAndDistanceToTime(
 				pace,
 				Number(distance) * distanceMeasure
 			);
-			if (!finalTime) return null;
+			if (!finalTimes) return null;
 			setError('');
 
-			form.setValue('time', finalTime);
+			form.setValue('time', finalTimes);
 		}
 	}
 

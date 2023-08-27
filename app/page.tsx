@@ -87,8 +87,8 @@ export default function Home() {
 	}
 
 	return (
-		<main className="flex gap-4 justify-center flex-col items-center">
-			<div className="bg-black bg-opacity-75 mt-8 md:mt-10 p-10 rounded-md">
+		<main className="bg-black flex gap-4 justify-center min-h-screen md:min-h-fit flex-col items-center">
+			<div className="text-gray-100 bg-opacity-75 mt-0 md:mt-20 p-10 rounded-md">
 				<Form {...form}>
 					<div>
 						<CardHeader>
@@ -126,7 +126,11 @@ export default function Home() {
 									<FormItem>
 										<FormLabel>Distance</FormLabel>
 										<FormControl>
-											<Input placeholder="0" {...field} />
+											<Input
+												className="w-full flex-shrink-0"
+												placeholder="0"
+												{...field}
+											/>
 										</FormControl>
 									</FormItem>
 								)}
@@ -142,7 +146,11 @@ export default function Home() {
 												defaultValue={field.value}
 											>
 												<SelectTrigger>
-													<SelectValue {...field} placeholder="Unit" />
+													<SelectValue
+														className="w-fit"
+														{...field}
+														placeholder="Unit"
+													/>
 												</SelectTrigger>
 												<SelectContent>
 													<SelectItem value={'km'}>km</SelectItem>
@@ -191,11 +199,12 @@ export default function Home() {
 							/>
 						</div>
 
-						<div className="flex gap-2">
+						<div className="flex mt-2 gap-2">
 							<Button className="w-full" variant="secondary" type="submit">
 								Submit
 							</Button>
 							<Button
+								className="border bg-inherit"
 								type="button"
 								onClick={() => {
 									form.reset();

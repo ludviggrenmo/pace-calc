@@ -87,12 +87,14 @@ export default function Home() {
 	}
 
 	return (
-		<main className="bg-hero-pattern min-h-screen flex gap-4 justify-center flex-col items-center">
-			<Form {...form}>
-				<div className="bg-black bg-opacity-75  p-10 rounded-md">
+		<main className="flex gap-4 justify-center flex-col items-center">
+			<div className="bg-black bg-opacity-75 mt-8 md:mt-10 p-10 rounded-md">
+				<Form {...form}>
 					<div>
 						<CardHeader>
-							<CardTitle className="text-4xl">Cardio calculator</CardTitle>
+							<CardTitle className="text-3xl font-extrabold italic  w-full">
+								PACE CALCULATOR
+							</CardTitle>
 							<CardDescription>
 								Fill in 2 fields to generate your data
 							</CardDescription>
@@ -205,8 +207,8 @@ export default function Home() {
 						</div>
 					</form>
 					<CardFooter className="flex justify-between"></CardFooter>
-				</div>
-			</Form>
+				</Form>
+			</div>
 			{error && <div className="text-gray-500">{error}</div>}
 		</main>
 	);

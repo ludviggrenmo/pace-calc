@@ -1,8 +1,15 @@
 import './globals.css';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
+import localFont from 'next/font/local';
 
-const inter = Inter({ subsets: ['latin'] });
+const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
+
+const helvetica = localFont({
+	src: '../public/fonts/HelveticaNeueCondensedBold.ttf',
+	display: 'swap',
+	variable: '--font-helvetica',
+});
 
 export const metadata: Metadata = {
 	title: 'Pace Calculator',
@@ -16,12 +23,15 @@ export default function RootLayout({
 	children: React.ReactNode;
 }) {
 	return (
-		<html className="bg-black" lang="en">
+		<html
+			className={`${helvetica.variable} ${inter.variable} bg-black`}
+			lang="en"
+		>
 			<meta
 				name="viewport"
 				content="width=device-width, initial-scale=1, maximum-scale=1"
 			/>
-			<body className={inter.className}>{children}</body>
+			<body>{children}</body>
 		</html>
 	);
 }

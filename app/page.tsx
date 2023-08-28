@@ -87,12 +87,12 @@ export default function Home() {
 	}
 
 	return (
-		<main className="bg-black flex gap-4 justify-center min-h-screen md:min-h-fit flex-col items-center">
+		<main className="bg-black flex gap-4 justify-center min-h-screen md:min-h-fit font-sans flex-col items-center">
 			<div className="text-gray-100 bg-opacity-75 mt-0 md:mt-20 p-10 rounded-md">
 				<Form {...form}>
 					<div>
 						<CardHeader>
-							<CardTitle className="text-3xl font-extrabold italic  w-full">
+							<CardTitle className="text-5xl underline font-extrabold font-mono italic w-full">
 								PACE CALCULATOR
 							</CardTitle>
 							<CardDescription>
@@ -118,63 +118,69 @@ export default function Home() {
 								</FormItem>
 							)}
 						/>
-						<div className="flex w-full gap-2 items-end justify-between">
-							<FormField
-								control={form.control}
-								name="distance"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Distance</FormLabel>
-										<FormControl>
-											<Input
-												className="w-full flex-shrink-0"
-												placeholder="0"
-												{...field}
-											/>
-										</FormControl>
-									</FormItem>
-								)}
-							/>
-							<FormField
-								control={form.control}
-								name="unit"
-								render={({ field }) => (
-									<FormItem>
-										<FormControl>
-											<Select
-												onValueChange={field.onChange}
-												defaultValue={field.value}
-											>
-												<SelectTrigger>
-													<SelectValue
-														className="w-fit"
-														{...field}
-														placeholder="Unit"
-													/>
-												</SelectTrigger>
-												<SelectContent>
-													<SelectItem value={'km'}>km</SelectItem>
-													<SelectItem value={'mi'}>mi</SelectItem>
-												</SelectContent>
-											</Select>
-										</FormControl>
-									</FormItem>
-								)}
-							/>
+						<div className="flex items-end gap-2 justify-between">
+							<div className="w-full">
+								<FormField
+									control={form.control}
+									name="distance"
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel>Distance</FormLabel>
+											<FormControl>
+												<Input
+													className="w-full flex-shrink-0"
+													placeholder="0"
+													{...field}
+												/>
+											</FormControl>
+										</FormItem>
+									)}
+								/>
+							</div>
+							<div>
+								<FormField
+									control={form.control}
+									name="unit"
+									render={({ field }) => (
+										<FormItem>
+											<FormControl>
+												<Select
+													onValueChange={field.onChange}
+													defaultValue={field.value}
+												>
+													<SelectTrigger>
+														<SelectValue
+															className="w-fit"
+															{...field}
+															placeholder="Unit"
+														/>
+													</SelectTrigger>
+													<SelectContent>
+														<SelectItem value={'km'}>km</SelectItem>
+														<SelectItem value={'mi'}>mi</SelectItem>
+													</SelectContent>
+												</Select>
+											</FormControl>
+										</FormItem>
+									)}
+								/>
+							</div>
 						</div>
 						<div className="flex w-full gap-2 items-end justify-between">
-							<FormField
-								control={form.control}
-								name="pace"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Pace</FormLabel>
-										<FormControl>
-											<Input placeholder="00:00" {...field} />
-										</FormControl>
-									</FormItem>
-								)}
-							/>
+							<div className="w-full">
+								<FormField
+									control={form.control}
+									name="pace"
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel>Pace</FormLabel>
+											<FormControl>
+												<Input placeholder="00:00" {...field} />
+											</FormControl>
+										</FormItem>
+									)}
+								/>
+							</div>
 							<FormField
 								control={form.control}
 								name="minUnit"

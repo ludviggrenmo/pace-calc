@@ -15,7 +15,12 @@ module.exports = {
 				'2xl': '1400px',
 			},
 		},
+		fontFamily: {
+			sans: ['var(--font-inter)'],
+			mono: ['var(--font-helvetica)'],
+		},
 		extend: {
+			extend: {},
 			backgroundImage: {
 				'hero-pattern':
 					"url('/NYHarriers-Take-the-Bridge_Ben-Pratt_20150919_Strava2-800x534.jpg')",

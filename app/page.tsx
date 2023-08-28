@@ -1,5 +1,5 @@
 'use client';
-import Logo from '@/components/ui/Logo';
+
 import { Button } from '@/components/ui/button';
 import {
 	Card,
@@ -25,27 +25,36 @@ import {
 } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { log } from 'console';
 import { useState } from 'react';
 
 import { useForm } from 'react-hook-form';
 
 import * as z from 'zod';
 
+enum MinUnitEnum {
+	MinPerKm = 'min/km',
+	MinPerMi = 'min/mi',
+}
+
+enum UnitEnum {
+	Km = 'km',
+	Mi = 'mi',
+}
+
 const formSchema = z.object({
 	time: z.string(),
 	distance: z.string(),
 	pace: z.string(),
-	unit: z.string(),
-	minUnit: z.string(),
+	unit: z.nativeEnum(UnitEnum),
+	minUnit: z.nativeEnum(MinUnitEnum),
 });
 
 export default function Home() {
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
-			unit: 'km',
-			minUnit: 'min/km',
+			unit: UnitEnum.Km,
+			minUnit: MinUnitEnum.MinPerKm,
 			time: '',
 			pace: '',
 			distance: '',
@@ -64,7 +73,6 @@ export default function Home() {
 		const { time, distance, pace, unit, minUnit } = values;
 
 		const distanceMeasure = unit === 'km' ? 1 : 1.60934;
-		//const distancePerMilMeasure = minUnit === 'min/km' ? 1 : 1.60934;
 
 		if (time && distance && pace) {
 			setError('The values does not add upp. Try leaving one field empty');
@@ -91,7 +99,7 @@ export default function Home() {
 		}
 
 		if (time && pace) {
-			const finalDistance = calculateDistance(time, pace);
+			const finalDistance = calculateDistance(time, pace, minUnit, unit);
 			form.setValue('distance', finalDistance);
 			setError('');
 		}
@@ -99,7 +107,9 @@ export default function Home() {
 		if (pace && distance) {
 			const finalTimes = convertPaceAndDistanceToTime(
 				pace,
-				Number(distance) * distanceMeasure
+				Number(distance) * distanceMeasure,
+				minUnit,
+				unit
 			);
 			if (!finalTimes) return null;
 			setError('');
@@ -330,9 +340,14 @@ export default function Home() {
 
 	function convertPaceAndDistanceToTime(
 		pace: string,
-		distance: number
+		distance: number,
+		minUnit: string,
+		unit: string
 	): string {
-		const [paceMinutes, paceSeconds] = pace.split(':').map(Number);
+		const checkedUnit = unit === 'km' ? Number(1) : Number(1.60934);
+		const checkedPace =
+			minUnit === 'min/km' ? pace : convertPaceMinKmToMinMi(pace);
+		const [paceMinutes, paceSeconds] = checkedPace.split(':').map(Number);
 
 		const paceInSeconds = paceMinutes * 60 + paceSeconds;
 		const totalTimeInSeconds = paceInSeconds * distance;
@@ -348,7 +363,12 @@ export default function Home() {
 		return formattedTime;
 	}
 
-	function calculateDistance(time: string, pace: string): string {
+	function calculateDistance(
+		time: string,
+		pace: string,
+		minUnit: string,
+		unit: string
+	): string {
 		const [timeHours, timeMinutes, timeSeconds] = time.split(':').map(Number);
 		const [paceMinutes, paceSeconds] = pace.split(':').map(Number);
 
@@ -357,8 +377,36 @@ export default function Home() {
 		const paceInSeconds = paceMinutes * 60 + paceSeconds;
 
 		const distanceInKm = totalTimeInSeconds / paceInSeconds;
-		const formattedDistance = distanceInKm.toFixed(2);
-		return parseFloat(formattedDistance).toString();
+
+		if (minUnit === 'min/km') {
+			const formattedDistance = distanceInKm.toFixed(2);
+			return parseFloat(formattedDistance).toString();
+		} else {
+			const formattedDistance = (distanceInKm * 1.60934).toFixed(2);
+			console.log(parseFloat(formattedDistance).toString());
+
+			return parseFloat(formattedDistance).toString();
+		}
+	}
+
+	function convertPaceMinKmToMinMi(paceMinKm: string): string {
+		const paceParts = paceMinKm.split(':');
+		const paceMinutes = parseInt(paceParts[0]);
+		const paceSeconds = parseInt(paceParts[1]);
+
+		const paceInSecondsPerKm = paceMinutes * 60 + paceSeconds;
+
+		// Convert pace to min/mi
+		const paceInMinPerMi = (paceInSecondsPerKm * 0.621371) / 60; // 1 mile is approximately 0.621371 km
+
+		const paceMinutesPerMi = Math.floor(paceInMinPerMi);
+		const paceSecondsPerMi = Math.round(
+			(paceInMinPerMi - paceMinutesPerMi) * 60
+		);
+
+		return `${paceMinutesPerMi.toString().padStart(2, '0')}:${paceSecondsPerMi
+			.toString()
+			.padStart(2, '0')}`;
 	}
 
 	function calculatePace(time: string, distance: number): string {

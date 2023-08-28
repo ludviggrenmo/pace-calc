@@ -4,6 +4,7 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import localFont from 'next/font/local';
 import Logo from '@/components/ui/Logo';
+import Link from 'next/link';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
@@ -26,7 +27,7 @@ export default function RootLayout({
 }) {
 	return (
 		<html
-			className={`${helvetica.variable} ${inter.variable} bg-black min-h-screen`}
+			className={`${helvetica.variable} ${inter.variable} bg-black `}
 			lang="en"
 		>
 			<script
@@ -39,20 +40,26 @@ export default function RootLayout({
 				name="viewport"
 				content="width=device-width, initial-scale=1, maximum-scale=1"
 			/>
-			<body>
+			<body className="min-h-screen flex justify-between flex-col">
 				<header className="border-b border-gray-800 py-1 px-4">
 					<ul className="flex text-gray-100 justify-between items-center">
 						<li className="flex h-10 justify-center items-center">
-							<Logo />
+							<Link href={'/'}>
+								<span className="sr-only">link to home</span>
+								<Logo />
+							</Link>
 						</li>
 						<li className="flex h-10 justify-center items-center">
 							<span className="uppercase text-[10px] text-gray-600">
-								whats my pace
+								whatsmypace.run
 							</span>
 						</li>
 					</ul>
 				</header>
 				{children}
+				<footer className="text-gray-100 flex items-center h-10 border uppercase text-xs border-gray-800 py-1 px-4">
+					<Link href={'/policy'}>Privacy policy</Link>
+				</footer>
 			</body>
 		</html>
 	);

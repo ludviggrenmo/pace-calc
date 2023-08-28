@@ -109,7 +109,7 @@ export default function Home() {
 	}
 
 	return (
-		<main className="text-md bg-black flex gap-4  md:min-h-fit font-sans flex-col ">
+		<main className="flex-1 text-md bg-black flex gap-4  md:min-h-fit font-sans flex-col ">
 			<div className="text-gray-100 bg-opacity-75 md:mt-20 mt-2 flex mx-auto flex-col rounded-md">
 				<Form {...form}>
 					<div>

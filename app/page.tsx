@@ -53,10 +53,17 @@ export default function Home() {
 
 	const [error, setError] = useState('');
 
+	const [paceError, setPaceError] = useState('');
+	const [timeError, setTimeError] = useState('');
+	const [distanceError, setDIstanceError] = useState('');
+
+	const [disabled, setDisabled] = useState(false);
+
 	function onSubmit(values: z.infer<typeof formSchema>) {
 		const { time, distance, pace, unit, minUnit } = values;
 
 		const distanceMeasure = unit === 'km' ? 1 : 1.60934;
+		//const distancePerMilMeasure = minUnit === 'min/km' ? 1 : 1.60934;
 
 		if (time && distance && pace) {
 			setError('The values does not add upp. Try leaving one field empty');
@@ -88,7 +95,7 @@ export default function Home() {
 	}
 
 	return (
-		<main className="text-md bg-black flex gap-4 min-h-screen md:min-h-fit font-sans flex-col ">
+		<main className="text-md bg-black flex gap-4  md:min-h-fit font-sans flex-col ">
 			<header className="border-b border-gray-800 py-1 px-4">
 				<ul className="flex text-gray-100 justify-between items-center">
 					<li className="flex h-10 justify-center items-center">
@@ -129,6 +136,7 @@ export default function Home() {
 									<FormControl>
 										<Input placeholder="00:00:00" {...field} />
 									</FormControl>
+									{timeError && <span>{timeError}</span>}
 								</FormItem>
 							)}
 						/>
@@ -185,14 +193,37 @@ export default function Home() {
 								<FormField
 									control={form.control}
 									name="pace"
-									render={({ field }) => (
-										<FormItem>
-											<FormLabel>Pace</FormLabel>
-											<FormControl>
-												<Input placeholder="00:00" {...field} />
-											</FormControl>
-										</FormItem>
-									)}
+									render={({ field }) => {
+										return (
+											<FormItem>
+												<FormLabel>Pace</FormLabel>
+												<FormControl>
+													<Input
+														placeholder="00:00"
+														{...field}
+														onChange={(e) => {
+															form.setValue('pace', e.target.value);
+															if (e.target.value.length > 2) {
+																let value = e.target.value.replace(
+																	/[^a-zA-Z0-9]/g,
+																	''
+																);
+
+																const chunks = [];
+																for (let i = 0; i < value.length; i += 2) {
+																	chunks.push(value.slice(i, i + 2));
+																}
+
+																// Join the chunks with colons and return the result
+
+																form.setValue('pace', chunks.join(':'));
+															} else form.setValue('pace', e.target.value);
+														}}
+													/>
+												</FormControl>
+											</FormItem>
+										);
+									}}
 								/>
 							</div>
 							<FormField
@@ -220,7 +251,12 @@ export default function Home() {
 						</div>
 
 						<div className="flex mt-2 gap-2">
-							<Button className="w-full" variant="secondary" type="submit">
+							<Button
+								disabled={disabled}
+								className="w-full"
+								variant="secondary"
+								type="submit"
+							>
 								SUBMIT
 							</Button>
 							<Button

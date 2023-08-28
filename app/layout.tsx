@@ -25,9 +25,14 @@ export default function RootLayout({
 }) {
 	return (
 		<html
-			className={`${helvetica.variable} ${inter.variable} bg-black`}
+			className={`${helvetica.variable} ${inter.variable} bg-black min-h-screen`}
 			lang="en"
 		>
+			<script
+				async
+				src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8367159843468497"
+				crossOrigin="anonymous"
+			></script>
 			<Favicon />
 			<meta
 				name="viewport"

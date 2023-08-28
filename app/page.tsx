@@ -71,6 +71,8 @@ export default function Home() {
 			return;
 		}
 
+		setError('');
+
 		if (time.length > 0 && time.length < 8) {
 			setTimeError('Check format (00:00:00)');
 			return;
@@ -233,7 +235,7 @@ export default function Home() {
 							</div>
 						</div>
 						<div className="flex w-full gap-2 items-end justify-between">
-							<div className="w-full">
+							<div className="w-full flex flex-col">
 								<FormField
 									control={form.control}
 									name="pace"
@@ -273,16 +275,12 @@ export default function Home() {
 														/>
 													</FormControl>
 												</FormItem>
-												{paceError && (
-													<span className="mt-2 block text-yellow-500">
-														{paceError}
-													</span>
-												)}
 											</>
 										);
 									}}
 								/>
 							</div>
+
 							<FormField
 								control={form.control}
 								name="minUnit"
@@ -306,7 +304,9 @@ export default function Home() {
 								)}
 							/>
 						</div>
-
+						{paceError && (
+							<div className="-mt-2 flex text-yellow-500">{paceError}</div>
+						)}
 						<div className="flex mt-2 gap-2">
 							<Button
 								disabled={disabled}

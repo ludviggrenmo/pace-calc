@@ -25,6 +25,7 @@ import {
 } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { log } from 'console';
 import { useState } from 'react';
 
 import { useForm } from 'react-hook-form';
@@ -67,6 +68,17 @@ export default function Home() {
 
 		if (time && distance && pace) {
 			setError('The values does not add upp. Try leaving one field empty');
+			return;
+		}
+
+		if (time.length > 0 && time.length < 8) {
+			setTimeError('Check format (00:00:00)');
+			return;
+		}
+		if (pace.length > 0 && pace.length > 5) {
+			console.log('tjhena');
+
+			setPaceError('Check format (00:00:00)');
 			return;
 		}
 
@@ -134,9 +146,41 @@ export default function Home() {
 								<FormItem>
 									<FormLabel>Time</FormLabel>
 									<FormControl>
-										<Input placeholder="00:00:00" {...field} />
+										<Input
+											placeholder="00:00:00"
+											{...field}
+											onChange={(e) => {
+												form.setValue('time', e.target.value);
+
+												if (timeError.length && e.target.value.length <= 7) {
+													console.log(e.target.value.length);
+
+													setTimeError('Check format (hh:min:sec)');
+												} else setTimeError('');
+
+												if (e.target.value.length > 2) {
+													let value = e.target.value.replace(
+														/[^a-zA-Z0-9]/g,
+														''
+													);
+
+													const chunks = [];
+													for (let i = 0; i < value.length; i += 2) {
+														chunks.push(value.slice(i, i + 2));
+													}
+
+													// Join the chunks with colons and return the result
+
+													form.setValue('time', chunks.join(':'));
+												} else form.setValue('time', e.target.value);
+											}}
+										/>
 									</FormControl>
-									{timeError && <span>{timeError}</span>}
+									{timeError && (
+										<span className="mt-2 block text-yellow-500">
+											{timeError}
+										</span>
+									)}
 								</FormItem>
 							)}
 						/>
@@ -195,33 +239,46 @@ export default function Home() {
 									name="pace"
 									render={({ field }) => {
 										return (
-											<FormItem>
-												<FormLabel>Pace</FormLabel>
-												<FormControl>
-													<Input
-														placeholder="00:00"
-														{...field}
-														onChange={(e) => {
-															form.setValue('pace', e.target.value);
-															if (e.target.value.length > 2) {
-																let value = e.target.value.replace(
-																	/[^a-zA-Z0-9]/g,
-																	''
-																);
+											<>
+												<FormItem>
+													<FormLabel>Pace</FormLabel>
+													<FormControl>
+														<Input
+															placeholder="00:00"
+															{...field}
+															onChange={(e) => {
+																form.setValue('pace', e.target.value);
 
-																const chunks = [];
-																for (let i = 0; i < value.length; i += 2) {
-																	chunks.push(value.slice(i, i + 2));
-																}
+																if (
+																	paceError.length &&
+																	e.target.value.length >= 7
+																) {
+																	setPaceError('Check format (min:sec)');
+																} else setPaceError('');
 
-																// Join the chunks with colons and return the result
+																if (e.target.value.length > 2) {
+																	let value = e.target.value.replace(
+																		/[^a-zA-Z0-9]/g,
+																		''
+																	);
 
-																form.setValue('pace', chunks.join(':'));
-															} else form.setValue('pace', e.target.value);
-														}}
-													/>
-												</FormControl>
-											</FormItem>
+																	const chunks = [];
+																	for (let i = 0; i < value.length; i += 2) {
+																		chunks.push(value.slice(i, i + 2));
+																	}
+
+																	form.setValue('pace', chunks.join(':'));
+																} else form.setValue('pace', e.target.value);
+															}}
+														/>
+													</FormControl>
+												</FormItem>
+												{paceError && (
+													<span className="mt-2 block text-yellow-500">
+														{paceError}
+													</span>
+												)}
+											</>
 										);
 									}}
 								/>
@@ -270,11 +327,17 @@ export default function Home() {
 								CLEAR
 							</Button>
 						</div>
+						{error && (
+							<div className="max-w-full w-[300px]">
+								<p className="text-yellow-500 break-normal text-xs max-w-full">
+									{error}
+								</p>
+							</div>
+						)}
 					</form>
 					<CardFooter className="flex justify-between"></CardFooter>
 				</Form>
 			</div>
-			{error && <div className="text-gray-500">{error}</div>}
 		</main>
 	);
 

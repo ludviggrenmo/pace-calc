@@ -87,7 +87,7 @@ export default function Home() {
 	}
 
 	return (
-		<main className="bg-black flex gap-4 justify-center min-h-screen md:min-h-fit font-sans flex-col items-center">
+		<main className="text-md bg-black flex gap-4 justify-center min-h-screen md:min-h-fit font-sans flex-col items-center">
 			<div className="text-gray-100 bg-opacity-75 mt-0 md:mt-20 p-10 rounded-md">
 				<Form {...form}>
 					<div>

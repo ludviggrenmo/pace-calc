@@ -1,3 +1,4 @@
+import Favicon from '@/components/Favicon';
 import './globals.css';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
@@ -12,7 +13,7 @@ const helvetica = localFont({
 });
 
 export const metadata: Metadata = {
-	title: 'Pace Calculator',
+	title: 'WHATS MY PACE',
 	description:
 		'Elevate your running routine with our cutting-edge website, your ultimate destination for generating precise running paces, calculating distances, and planning efficient workout times. Unlock your full potential through accurate insights and optimize your fitness journey with ease.nerated by create next app',
 };
@@ -27,6 +28,7 @@ export default function RootLayout({
 			className={`${helvetica.variable} ${inter.variable} bg-black`}
 			lang="en"
 		>
+			<Favicon />
 			<meta
 				name="viewport"
 				content="width=device-width, initial-scale=1, maximum-scale=1"

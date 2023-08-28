@@ -1,4 +1,5 @@
 'use client';
+import Logo from '@/components/ui/Logo';
 import { Button } from '@/components/ui/button';
 import {
 	Card,
@@ -87,8 +88,21 @@ export default function Home() {
 	}
 
 	return (
-		<main className="text-md bg-black flex gap-4 justify-center min-h-screen md:min-h-fit font-sans flex-col items-center">
-			<div className="text-gray-100 bg-opacity-75 mt-0 md:mt-20 p-10 rounded-md">
+		<main className="text-md bg-black flex gap-4 min-h-screen md:min-h-fit font-sans flex-col ">
+			<header className="border-b border-gray-800 py-1 px-4">
+				<ul className="flex text-gray-100 justify-between items-center">
+					<li className="flex h-10 justify-center items-center">
+						<Logo />
+					</li>
+					<li className="flex h-10 justify-center items-center">
+						<span className="uppercase text-[10px] text-gray-600">
+							whats my pace
+						</span>
+					</li>
+				</ul>
+			</header>
+
+			<div className="text-gray-100 bg-opacity-75 mt-0 md:mt-20 p-10 items-center flex mx-auto flex-col rounded-md">
 				<Form {...form}>
 					<div>
 						<CardHeader>

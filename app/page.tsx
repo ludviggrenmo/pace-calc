@@ -110,20 +110,7 @@ export default function Home() {
 
 	return (
 		<main className="text-md bg-black flex gap-4  md:min-h-fit font-sans flex-col ">
-			<header className="border-b border-gray-800 py-1 px-4">
-				<ul className="flex text-gray-100 justify-between items-center">
-					<li className="flex h-10 justify-center items-center">
-						<Logo />
-					</li>
-					<li className="flex h-10 justify-center items-center">
-						<span className="uppercase text-[10px] text-gray-600">
-							whats my pace
-						</span>
-					</li>
-				</ul>
-			</header>
-
-			<div className="text-gray-100 bg-opacity-75 mt-0 md:mt-20 p-10 items-center flex mx-auto flex-col rounded-md">
+			<div className="text-gray-100 bg-opacity-75 md:mt-20 mt-2 flex mx-auto flex-col rounded-md">
 				<Form {...form}>
 					<div>
 						<CardHeader>
@@ -310,11 +297,11 @@ export default function Home() {
 						<div className="flex mt-2 gap-2">
 							<Button
 								disabled={disabled}
-								className="w-full"
+								className="w-fit"
 								variant="secondary"
 								type="submit"
 							>
-								SUBMIT
+								CALCULATE
 							</Button>
 							<Button
 								className="border bg-inherit"
@@ -324,7 +311,7 @@ export default function Home() {
 									setError('');
 								}}
 							>
-								CLEAR
+								RESET
 							</Button>
 						</div>
 						{error && (

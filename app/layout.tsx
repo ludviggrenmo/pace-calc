@@ -3,6 +3,7 @@ import './globals.css';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import localFont from 'next/font/local';
+import Logo from '@/components/ui/Logo';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
@@ -38,7 +39,21 @@ export default function RootLayout({
 				name="viewport"
 				content="width=device-width, initial-scale=1, maximum-scale=1"
 			/>
-			<body>{children}</body>
+			<body>
+				<header className="border-b border-gray-800 py-1 px-4">
+					<ul className="flex text-gray-100 justify-between items-center">
+						<li className="flex h-10 justify-center items-center">
+							<Logo />
+						</li>
+						<li className="flex h-10 justify-center items-center">
+							<span className="uppercase text-[10px] text-gray-600">
+								whats my pace
+							</span>
+						</li>
+					</ul>
+				</header>
+				{children}
+			</body>
 		</html>
 	);
 }

@@ -207,7 +207,7 @@ export default function Home() {
 
 						<div className="flex mt-2 gap-2">
 							<Button className="w-full" variant="secondary" type="submit">
-								Submit
+								SUBMIT
 							</Button>
 							<Button
 								className="border bg-inherit"
@@ -217,7 +217,7 @@ export default function Home() {
 									setError('');
 								}}
 							>
-								Clear
+								CLEAR
 							</Button>
 						</div>
 					</form>

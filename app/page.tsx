@@ -31,7 +31,7 @@ import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 import { setPaces } from './utils';
 
-export enum MinUnitEnum {
+enum MinUnitEnum {
 	MinPerKm = 'min/km',
 	MinPerMi = 'min/mi',
 	KmPerH = 'km/h',

@@ -5,6 +5,7 @@ import { Inter } from 'next/font/google';
 import localFont from 'next/font/local';
 import Logo from '@/components/ui/Logo';
 import Link from 'next/link';
+import { Analytics } from '@vercel/analytics/react';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
@@ -57,6 +58,7 @@ export default function RootLayout({
 					</ul>
 				</header>
 				{children}
+				<Analytics />
 				<footer className="text-gray-100 flex items-center h-10 border uppercase text-xs border-gray-800 py-1 px-4">
 					<Link href={'/policy'}>Privacy policy</Link>
 				</footer>

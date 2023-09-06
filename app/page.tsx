@@ -2,7 +2,6 @@
 
 import { Button } from '@/components/ui/button';
 import {
-	Card,
 	CardDescription,
 	CardFooter,
 	CardHeader,
@@ -30,10 +29,13 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 import * as z from 'zod';
+import { setPaces } from './utils';
 
-enum MinUnitEnum {
+export enum MinUnitEnum {
 	MinPerKm = 'min/km',
 	MinPerMi = 'min/mi',
+	KmPerH = 'km/h',
+	MiPerH = 'mi/h',
 }
 
 enum UnitEnum {
@@ -65,14 +67,9 @@ export default function Home() {
 
 	const [paceError, setPaceError] = useState('');
 	const [timeError, setTimeError] = useState('');
-	const [distanceError, setDIstanceError] = useState('');
-
-	const [disabled, setDisabled] = useState(false);
 
 	function onSubmit(values: z.infer<typeof formSchema>) {
 		const { time, distance, pace, unit, minUnit } = values;
-
-		const distanceMeasure = unit === 'km' ? 1 : 1.60934;
 
 		if (time && distance && pace) {
 			setError('The values does not add upp. Try leaving one field empty');
@@ -93,24 +90,19 @@ export default function Home() {
 		}
 
 		if (time && distance) {
-			const finalPace = calculatePace(time, Number(distance) * distanceMeasure);
+			const finalPace = '';
 			form.setValue('pace', finalPace);
 			setError('');
 		}
 
 		if (time && pace) {
-			const finalDistance = calculateDistance(time, pace, minUnit, unit);
+			const finalDistance = '';
 			form.setValue('distance', finalDistance);
 			setError('');
 		}
 
 		if (pace && distance) {
-			const finalTimes = convertPaceAndDistanceToTime(
-				pace,
-				Number(distance) * distanceMeasure,
-				minUnit,
-				unit
-			);
+			const finalTimes = '';
 			if (!finalTimes) return null;
 			setError('');
 
@@ -285,15 +277,27 @@ export default function Home() {
 									<FormItem>
 										<FormControl>
 											<Select
-												onValueChange={field.onChange}
+												onValueChange={(e: MinUnitEnum) => {
+													field.onChange();
+													if (e) {
+														const pace = form.getValues('pace');
+														const measure = setPaces(e, pace);
+														if (measure) form.setValue('pace', measure);
+													}
+												}}
 												defaultValue={field.value}
 											>
 												<SelectTrigger>
 													<SelectValue placeholder="Min/?" />
 												</SelectTrigger>
 												<SelectContent>
-													<SelectItem value={'min/km'}>min/km</SelectItem>
-													<SelectItem value={'min/mi'}>min/mi</SelectItem>
+													{Object.values(MinUnitEnum).map((unit) => {
+														return (
+															<SelectItem key={unit} value={unit}>
+																{unit}
+															</SelectItem>
+														);
+													})}
 												</SelectContent>
 											</Select>
 										</FormControl>
@@ -305,12 +309,7 @@ export default function Home() {
 							<div className="-mt-2 flex text-yellow-500">{paceError}</div>
 						)}
 						<div className="flex mt-2 gap-2">
-							<Button
-								disabled={disabled}
-								className="w-fit"
-								variant="secondary"
-								type="submit"
-							>
+							<Button className="w-fit" variant="secondary" type="submit">
 								CALCULATE
 							</Button>
 							<Button
@@ -337,92 +336,4 @@ export default function Home() {
 			</div>
 		</main>
 	);
-
-	function convertPaceAndDistanceToTime(
-		pace: string,
-		distance: number,
-		minUnit: string,
-		unit: string
-	): string {
-		const checkedUnit = unit === 'km' ? Number(1) : Number(1.60934);
-		const checkedPace =
-			minUnit === 'min/km' ? pace : convertPaceMinKmToMinMi(pace);
-		const [paceMinutes, paceSeconds] = checkedPace.split(':').map(Number);
-
-		const paceInSeconds = paceMinutes * 60 + paceSeconds;
-		const totalTimeInSeconds = paceInSeconds * distance;
-
-		const hours = Math.floor(totalTimeInSeconds / 3600);
-		const minutes = Math.floor((totalTimeInSeconds % 3600) / 60);
-		const seconds = totalTimeInSeconds % 60;
-
-		const formattedTime = `${String(hours).padStart(2, '0')}:${String(
-			minutes
-		).padStart(2, '0')}:${String(seconds.toFixed(0)).padStart(2, '0')}`;
-
-		return formattedTime;
-	}
-
-	function calculateDistance(
-		time: string,
-		pace: string,
-		minUnit: string,
-		unit: string
-	): string {
-		const [timeHours, timeMinutes, timeSeconds] = time.split(':').map(Number);
-		const [paceMinutes, paceSeconds] = pace.split(':').map(Number);
-
-		const totalTimeInSeconds =
-			timeHours * 3600 + timeMinutes * 60 + timeSeconds;
-		const paceInSeconds = paceMinutes * 60 + paceSeconds;
-
-		const distanceInKm = totalTimeInSeconds / paceInSeconds;
-
-		if (minUnit === 'min/km') {
-			const formattedDistance = distanceInKm.toFixed(2);
-			return parseFloat(formattedDistance).toString();
-		} else {
-			const formattedDistance = (distanceInKm * 1.60934).toFixed(2);
-			console.log(parseFloat(formattedDistance).toString());
-
-			return parseFloat(formattedDistance).toString();
-		}
-	}
-
-	function convertPaceMinKmToMinMi(paceMinKm: string): string {
-		const paceParts = paceMinKm.split(':');
-		const paceMinutes = parseInt(paceParts[0]);
-		const paceSeconds = parseInt(paceParts[1]);
-
-		const paceInSecondsPerKm = paceMinutes * 60 + paceSeconds;
-
-		// Convert pace to min/mi
-		const paceInMinPerMi = (paceInSecondsPerKm * 0.621371) / 60; // 1 mile is approximately 0.621371 km
-
-		const paceMinutesPerMi = Math.floor(paceInMinPerMi);
-		const paceSecondsPerMi = Math.round(
-			(paceInMinPerMi - paceMinutesPerMi) * 60
-		);
-
-		return `${paceMinutesPerMi.toString().padStart(2, '0')}:${paceSecondsPerMi
-			.toString()
-			.padStart(2, '0')}`;
-	}
-
-	function calculatePace(time: string, distance: number): string {
-		const [timeHours, timeMinutes, timeSeconds] = time.split(':').map(Number);
-
-		const totalTimeInSeconds =
-			timeHours * 3600 + timeMinutes * 60 + timeSeconds;
-		const paceInSeconds = totalTimeInSeconds / distance;
-
-		const paceMinutes = Math.floor(paceInSeconds / 60);
-		const paceSeconds = Math.round(paceInSeconds % 60);
-
-		const formattedPace = `${String(paceMinutes).padStart(2, '0')}:${String(
-			paceSeconds
-		).padStart(2, '0')}`;
-
-		return formattedPace;
-	}
 }

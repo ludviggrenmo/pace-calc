@@ -1,4 +1,9 @@
-import { MinUnitEnum } from './page';
+enum MinUnitEnum {
+	MinPerKm = 'min/km',
+	MinPerMi = 'min/mi',
+	KmPerH = 'km/h',
+	MiPerH = 'mi/h',
+}
 
 export function setPaces(measure: MinUnitEnum, pace: string) {
 	if (!measure || !pace) {

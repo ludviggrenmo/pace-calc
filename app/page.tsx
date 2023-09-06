@@ -47,15 +47,15 @@ const formSchema = z.object({
 	time: z.string(),
 	distance: z.string(),
 	pace: z.string(),
-	unit: z.nativeEnum(UnitEnum),
-	minUnit: z.nativeEnum(MinUnitEnum),
+	unit: z.string(),
+	minUnit: z.string(),
 });
 
 export default function Home() {
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
-			unit: UnitEnum.Km,
+			unit: 'km',
 			minUnit: MinUnitEnum.MinPerKm,
 			time: '',
 			pace: '',
@@ -199,7 +199,7 @@ export default function Home() {
 									control={form.control}
 									name="unit"
 									render={({ field }) => (
-										<FormItem>
+										<FormItem className="min-w-[65px]">
 											<FormControl>
 												<Select
 													onValueChange={field.onChange}
@@ -209,7 +209,7 @@ export default function Home() {
 														<SelectValue
 															className="w-fit"
 															{...field}
-															placeholder="Unit"
+															placeholder="km"
 														/>
 													</SelectTrigger>
 													<SelectContent>
@@ -274,7 +274,7 @@ export default function Home() {
 								control={form.control}
 								name="minUnit"
 								render={({ field }) => (
-									<FormItem>
+									<FormItem className="min-w-[97px]">
 										<FormControl>
 											<Select
 												onValueChange={(e: MinUnitEnum) => {
